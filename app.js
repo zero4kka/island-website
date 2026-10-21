@@ -106,10 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="brand-dot" style="background:#fb923c; box-shadow:0 0 8px #fb923c;"></span>
       `;
     } else if (mode === 'weather') {
-      simLeftText.innerHTML = '⛅ +18°C • Ясно, без осадков';
+      const wData = weatherPresets[activeWeatherEffect] || weatherPresets.wind;
+      simLeftText.innerHTML = wData.badge;
       simRightElement.innerHTML = `
         <span style="font-size:13px; font-weight:700; color:#5fe0a0;">MET.no</span>
       `;
+      if (activeWeatherEffect === 'storm') scheduleNextLightning();
     } else if (mode === 'timer') {
       simLeftText.innerHTML = '⏱️ 04:32 • Фокус на разработке';
       simRightElement.innerHTML = `
@@ -442,11 +444,407 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Weather Seasonal Effects Demo
+  // ---------------- 3.5 LIVE SEASONAL WEATHER FX ENGINE ----------------
+  const weatherCanvas = document.getElementById('weatherFxCanvas');
+  const weatherLightning = document.getElementById('weatherLightning');
+  const simStage = document.getElementById('simStage');
+  let weatherCtx = null;
+  let activeWeatherEffect = 'wind';
+  let weatherAnimId = null;
+  let lightningTimer = null;
+  let sunRaysAngle = 0;
+
+  // Particle pools
+  let windLeaves = [];
+  let stormDrops = [];
+  let stormSplashes = [];
+  let sunMotes = [];
+  let snowFlakes = [];
+
+  const weatherPresets = {
+    wind: {
+      temp: '+17°C',
+      cond: 'Ветрено, свежий бриз',
+      wind: '💨 9.4 м/с',
+      humidity: '💧 42%',
+      uv: '☀️ УФ 3',
+      badge: '🍃 +17°C • Порывистый ветер'
+    },
+    storm: {
+      temp: '+13°C',
+      cond: 'Грозовой шторм, ливень',
+      wind: '💨 14.8 м/с',
+      humidity: '💧 96%',
+      uv: '⚡ Грозовой фронт',
+      badge: '⚡ +13°C • Гроза и ливень'
+    },
+    sun: {
+      temp: '+24°C',
+      cond: 'Ясно, тёплое солнце',
+      wind: '💨 2.1 м/с',
+      humidity: '💧 35%',
+      uv: '☀️ УФ 6 (высокий)',
+      badge: '☀️ +24°C • Ясно, тепло'
+    },
+    snow: {
+      temp: '-3°C',
+      cond: 'Снегопад, тихая метель',
+      wind: '💨 4.5 м/с',
+      humidity: '💧 88%',
+      uv: '❄️ Зимний режим',
+      badge: '❄️ -3°C • Зимний снегопад'
+    }
+  };
+
+  function initWeatherCanvas() {
+    if (!weatherCanvas || !simStage) return;
+    weatherCtx = weatherCanvas.getContext('2d');
+    resizeWeather();
+    window.addEventListener('resize', resizeWeather);
+
+    initParticles();
+    startWeatherLoop();
+  }
+
+  function resizeWeather() {
+    if (!weatherCanvas || !simStage) return;
+    const rect = simStage.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    weatherCanvas.width = rect.width * dpr;
+    weatherCanvas.height = rect.height * dpr;
+    if (weatherCtx) {
+      weatherCtx.setTransform(1, 0, 0, 1, 0, 0);
+      weatherCtx.scale(dpr, dpr);
+    }
+  }
+
+  function initParticles() {
+    const w = simStage ? simStage.clientWidth : 720;
+    const h = simStage ? simStage.clientHeight : 320;
+
+    // Wind leaves
+    windLeaves = [];
+    const leafPalette = ['#4ade80', '#22c55e', '#84cc16', '#a3e635', '#eab308'];
+    for (let i = 0; i < 28; i++) {
+      windLeaves.push({
+        x: Math.random() * (w + 100) - 50,
+        y: Math.random() * (h + 40) - 20,
+        vx: 1.8 + Math.random() * 2.6,
+        vy: 0.7 + Math.random() * 1.5,
+        size: 7 + Math.random() * 7,
+        angle: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.05,
+        flipAngle: Math.random() * Math.PI * 2,
+        flipSpeed: 0.04 + Math.random() * 0.05,
+        color: leafPalette[Math.floor(Math.random() * leafPalette.length)],
+        opacity: 0.7 + Math.random() * 0.25
+      });
+    }
+
+    // Storm raindrops
+    stormDrops = [];
+    stormSplashes = [];
+    for (let i = 0; i < 95; i++) {
+      stormDrops.push({
+        x: Math.random() * (w + 140) - 60,
+        y: Math.random() * h,
+        vx: 3 + Math.random() * 2,
+        vy: 15 + Math.random() * 11,
+        len: 14 + Math.random() * 18,
+        opacity: 0.4 + Math.random() * 0.4,
+        width: 1 + Math.random() * 0.7
+      });
+    }
+
+    // Sun motes
+    sunMotes = [];
+    for (let i = 0; i < 35; i++) {
+      sunMotes.push({
+        x: w / 2 + (Math.random() - 0.5) * (w * 0.8),
+        y: Math.random() * h,
+        vy: -0.3 - Math.random() * 0.5,
+        vx: (Math.random() - 0.5) * 0.4,
+        r: 1.5 + Math.random() * 2.8,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.03 + Math.random() * 0.04,
+        color: Math.random() > 0.4 ? '251, 191, 36' : '254, 240, 138'
+      });
+    }
+
+    // Snowflakes
+    snowFlakes = [];
+    for (let i = 0; i < 80; i++) {
+      const depth = Math.random();
+      snowFlakes.push({
+        x: Math.random() * (w + 60) - 30,
+        y: Math.random() * h,
+        r: 1.2 + depth * 3.6,
+        vy: 0.5 + depth * 1.3,
+        swayAngle: Math.random() * Math.PI * 2,
+        swaySpeed: 0.02 + Math.random() * 0.03,
+        swayAmp: 0.6 + Math.random() * 0.9,
+        opacity: 0.35 + depth * 0.55
+      });
+    }
+  }
+
+  function startWeatherLoop() {
+    if (weatherAnimId) cancelAnimationFrame(weatherAnimId);
+
+    function frame() {
+      if (weatherCtx && simStage) {
+        const w = simStage.clientWidth;
+        const h = simStage.clientHeight;
+        weatherCtx.clearRect(0, 0, w, h);
+
+        if (activeWeatherEffect === 'wind') {
+          // Breeze wind lines
+          weatherCtx.save();
+          weatherCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+          weatherCtx.lineWidth = 1.5;
+          const t = Date.now() * 0.002;
+          for (let b = 0; b < 3; b++) {
+            const yB = 40 + b * 80;
+            weatherCtx.beginPath();
+            weatherCtx.moveTo(0, yB + Math.sin(t + b) * 14);
+            weatherCtx.bezierCurveTo(
+              w * 0.35, yB + Math.cos(t + b) * 20,
+              w * 0.65, yB - Math.sin(t + b) * 20,
+              w, yB + Math.cos(t + b) * 10
+            );
+            weatherCtx.stroke();
+          }
+          weatherCtx.restore();
+
+          // Leaves
+          windLeaves.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy + Math.sin(p.angle * 2) * 0.4;
+            p.angle += p.rotSpeed;
+            p.flipAngle += p.flipSpeed;
+
+            if (p.x > w + 40) p.x = -40;
+            if (p.y > h + 30) p.y = -30;
+
+            const flip = Math.sin(p.flipAngle);
+            weatherCtx.save();
+            weatherCtx.translate(p.x, p.y);
+            weatherCtx.rotate(p.angle);
+            weatherCtx.scale(1, Math.abs(flip) < 0.1 ? 0.1 : flip);
+
+            weatherCtx.fillStyle = p.color;
+            weatherCtx.globalAlpha = p.opacity;
+
+            weatherCtx.beginPath();
+            weatherCtx.moveTo(-p.size, 0);
+            weatherCtx.quadraticCurveTo(0, -p.size * 0.75, p.size, 0);
+            weatherCtx.quadraticCurveTo(0, p.size * 0.75, -p.size, 0);
+            weatherCtx.fill();
+
+            weatherCtx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+            weatherCtx.lineWidth = 1;
+            weatherCtx.beginPath();
+            weatherCtx.moveTo(-p.size * 0.8, 0);
+            weatherCtx.lineTo(p.size * 0.8, 0);
+            weatherCtx.stroke();
+
+            weatherCtx.restore();
+          });
+        } else if (activeWeatherEffect === 'storm') {
+          // Rain streaks
+          weatherCtx.save();
+          stormDrops.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.y > h || p.x > w + 40) {
+              if (Math.random() > 0.45 && stormSplashes.length < 30) {
+                stormSplashes.push({
+                  x: p.x,
+                  y: Math.min(p.y, h - 8),
+                  r: 1,
+                  maxR: 4 + Math.random() * 5,
+                  opacity: 0.65
+                });
+              }
+              p.y = -p.len - Math.random() * 20;
+              p.x = Math.random() * (w + 120) - 50;
+            }
+
+            const grad = weatherCtx.createLinearGradient(p.x, p.y, p.x + p.vx, p.y + p.len);
+            grad.addColorStop(0, `rgba(180, 220, 255, ${p.opacity})`);
+            grad.addColorStop(1, 'rgba(180, 220, 255, 0.05)');
+
+            weatherCtx.strokeStyle = grad;
+            weatherCtx.lineWidth = p.width;
+            weatherCtx.beginPath();
+            weatherCtx.moveTo(p.x, p.y);
+            weatherCtx.lineTo(p.x + p.vx * 0.6, p.y + p.len);
+            weatherCtx.stroke();
+          });
+
+          // Splashes
+          for (let i = stormSplashes.length - 1; i >= 0; i--) {
+            const s = stormSplashes[i];
+            s.r += 0.45;
+            s.opacity -= 0.038;
+            if (s.opacity <= 0 || s.r >= s.maxR) {
+              stormSplashes.splice(i, 1);
+              continue;
+            }
+            weatherCtx.strokeStyle = `rgba(180, 220, 255, ${s.opacity})`;
+            weatherCtx.lineWidth = 1;
+            weatherCtx.beginPath();
+            weatherCtx.ellipse(s.x, s.y, s.r * 1.4, s.r * 0.6, 0, 0, Math.PI * 2);
+            weatherCtx.stroke();
+          }
+          weatherCtx.restore();
+        } else if (activeWeatherEffect === 'sun') {
+          const cx = w / 2;
+          const cy = 35;
+
+          weatherCtx.save();
+          // Warm radial halo
+          const halo = weatherCtx.createRadialGradient(cx, cy, 20, cx, cy, 200);
+          halo.addColorStop(0, 'rgba(251, 191, 36, 0.28)');
+          halo.addColorStop(0.45, 'rgba(245, 158, 11, 0.12)');
+          halo.addColorStop(1, 'rgba(245, 158, 11, 0)');
+          weatherCtx.fillStyle = halo;
+          weatherCtx.beginPath();
+          weatherCtx.arc(cx, cy, 200, 0, Math.PI * 2);
+          weatherCtx.fill();
+
+          // Rotating rays
+          sunRaysAngle += 0.003;
+          const numRays = 12;
+          weatherCtx.translate(cx, cy);
+          weatherCtx.rotate(sunRaysAngle);
+          for (let i = 0; i < numRays; i++) {
+            weatherCtx.rotate((Math.PI * 2) / numRays);
+            weatherCtx.fillStyle = i % 2 === 0 ? 'rgba(254, 240, 138, 0.05)' : 'rgba(251, 191, 36, 0.03)';
+            weatherCtx.beginPath();
+            weatherCtx.moveTo(0, 0);
+            weatherCtx.lineTo(-18, 230);
+            weatherCtx.lineTo(18, 230);
+            weatherCtx.closePath();
+            weatherCtx.fill();
+          }
+          weatherCtx.restore();
+
+          // Sparkles
+          weatherCtx.save();
+          sunMotes.forEach(p => {
+            p.y += p.vy;
+            p.x += p.vx;
+            p.pulse += p.pulseSpeed;
+
+            if (p.y < 0) {
+              p.y = h + 10;
+              p.x = cx + (Math.random() - 0.5) * (w * 0.7);
+            }
+
+            const alpha = 0.4 + Math.sin(p.pulse) * 0.35;
+            weatherCtx.fillStyle = `rgba(${p.color}, ${Math.max(0.1, alpha)})`;
+            weatherCtx.shadowColor = `rgb(${p.color})`;
+            weatherCtx.shadowBlur = 6;
+            weatherCtx.beginPath();
+            weatherCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            weatherCtx.fill();
+          });
+          weatherCtx.restore();
+        } else if (activeWeatherEffect === 'snow') {
+          weatherCtx.save();
+          snowFlakes.forEach(p => {
+            p.swayAngle += p.swaySpeed;
+            p.x += Math.sin(p.swayAngle) * p.swayAmp + 0.3;
+            p.y += p.vy;
+
+            if (p.y > h + 10) {
+              p.y = -10;
+              p.x = Math.random() * (w + 40) - 20;
+            }
+            if (p.x > w + 20) p.x = -20;
+            if (p.x < -20) p.x = w + 20;
+
+            weatherCtx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+            if (p.r > 3) {
+              weatherCtx.shadowColor = 'rgba(255, 255, 255, 0.7)';
+              weatherCtx.shadowBlur = 4;
+            } else {
+              weatherCtx.shadowBlur = 0;
+            }
+
+            weatherCtx.beginPath();
+            weatherCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            weatherCtx.fill();
+          });
+          weatherCtx.restore();
+        }
+      }
+      weatherAnimId = requestAnimationFrame(frame);
+    }
+    weatherAnimId = requestAnimationFrame(frame);
+  }
+
+  function triggerLightning() {
+    if (!weatherLightning) return;
+    weatherLightning.classList.add('flash');
+    setTimeout(() => {
+      weatherLightning.classList.remove('flash');
+      setTimeout(() => {
+        weatherLightning.classList.add('flash');
+        setTimeout(() => weatherLightning.classList.remove('flash'), 60);
+      }, 70);
+    }, 110);
+  }
+
+  function scheduleNextLightning() {
+    clearTimeout(lightningTimer);
+    const delay = 3200 + Math.random() * 4000;
+    lightningTimer = setTimeout(() => {
+      if (activeWeatherEffect === 'storm') {
+        triggerLightning();
+        scheduleNextLightning();
+      }
+    }, delay);
+  }
+
+  // Interactive Button Clicker
   window.setWeatherEffect = function(btn, effect) {
+    activeWeatherEffect = effect;
+
     document.querySelectorAll('.weather-btn-effect').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    showToast(`Сезонный эффект погоды: ${btn.textContent}`);
+    if (btn) btn.classList.add('active');
+
+    const data = weatherPresets[effect] || weatherPresets.wind;
+    const tempEl = document.getElementById('weatherTemp');
+    const condEl = document.getElementById('weatherCondTitle');
+    const windEl = document.getElementById('metricWind');
+    const humEl = document.getElementById('metricHumidity');
+    const uvEl = document.getElementById('metricUv');
+    const simLeftText = document.getElementById('simLeftText');
+
+    if (tempEl) tempEl.textContent = data.temp;
+    if (condEl) condEl.textContent = data.cond;
+    if (windEl) windEl.textContent = data.wind;
+    if (humEl) humEl.textContent = data.humidity;
+    if (uvEl) uvEl.textContent = data.uv;
+
+    if (currentMode === 'weather' && simLeftText) {
+      simLeftText.innerHTML = data.badge;
+    }
+
+    if (effect === 'storm') {
+      scheduleNextLightning();
+      triggerLightning();
+    } else {
+      clearTimeout(lightningTimer);
+    }
+
+    if (typeof showToast === 'function') {
+      const labels = { wind: '🍃 Ветер', storm: '⚡ Гроза', sun: '☀️ Солнце', snow: '❄️ Снег' };
+      showToast(`Сезонный эффект: ${labels[effect] || effect}`);
+    }
   };
 
   // Timer simulation
@@ -639,5 +1037,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial renders
   cornerMascot.render();
   simMascot.render();
+  initWeatherCanvas();
 
 });

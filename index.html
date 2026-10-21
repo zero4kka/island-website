@@ -6,7 +6,7 @@
   <title>Island — Dynamic Island для Windows 10 & 11</title>
   <meta name="description" content="Официальный сайт приложения Island: умная пилюля из магнитной жидкости для Windows. 25 интерактивных персонажей, управление плеером, буфер обмена и установка из закрытого репозитория GitHub.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='2' y='10' width='28' height='12' rx='6' fill='%23000'/><circle cx='8' cy='16' r='2' fill='%235fe0a0'/><circle cx='22' cy='16' r='3' fill='%23222'/></svg>">
-  <link rel="stylesheet" href="styles.css?v=1.3.7">
+  <link rel="stylesheet" href="styles.css?v=1.3.8">
 </head>
 <body>
 
@@ -138,7 +138,10 @@
               </div>
             </div>
 
-            <div class="sim-stage">
+            <div class="sim-stage" id="simStage">
+              <!-- LIVE SEASONAL WEATHER PARTICLES CANVAS -->
+              <canvas id="weatherFxCanvas" class="weather-fx-canvas"></canvas>
+              <div class="weather-lightning-flash" id="weatherLightning"></div>
               
               <!-- DYNAMIC PILL CONTAINER -->
               <div class="island-dynamic-pill collapsed skin-cyberpunk" id="dynamicPill" title="Нажмите, чтобы развернуть!">
@@ -254,17 +257,17 @@
                       
                       <div class="weather-header-row">
                         <div class="weather-temp-block">
-                          <span class="weather-degrees">+18°C</span>
+                          <span class="weather-degrees" id="weatherTemp">+17°C</span>
                           <div class="weather-desc-wrap">
-                            <span class="weather-cond-title">Ясно, без осадков</span>
-                            <span class="weather-location">Москва, MET Norway Live</span>
+                            <span class="weather-cond-title" id="weatherCondTitle">Ветрено, свежий бриз</span>
+                            <span class="weather-location" id="weatherLocation">Москва, MET Norway Live</span>
                           </div>
                         </div>
 
                         <div class="weather-metrics-pills">
-                          <span>💨 3.2 м/с</span>
-                          <span>💧 48%</span>
-                          <span>☀️ УФ 2</span>
+                          <span id="metricWind">💨 9.4 м/с</span>
+                          <span id="metricHumidity">💧 42%</span>
+                          <span id="metricUv">☀️ УФ 3</span>
                         </div>
                       </div>
 
@@ -856,6 +859,6 @@ npm start</div>
       }
     });
   </script>
-  <script src="app.js?v=1.3.7"></script>
+  <script src="app.js?v=1.3.8"></script>
 </body>
 </html>
