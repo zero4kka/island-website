@@ -1,0 +1,6 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/Island_Setup.exe", "destination": "/api/download" }
+  ]
+}

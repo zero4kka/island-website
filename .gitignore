@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+.npm
+
+# Large installer binary (must not be committed to Git repo, GitHub blocks files > 100MB)
+# The website downloads it automatically from GitHub Releases
+Island_Setup.exe
+*.exe
+
+# Logs & temp
+*.log
+.DS_Store
+.vercel
+.env
+.env.*

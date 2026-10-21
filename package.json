@@ -1,0 +1,12 @@
+{
+  "name": "island-website",
+  "version": "1.3.6",
+  "description": "Официальный сайт приложения Island (Dynamic Island для Windows)",
+  "main": "serve.js",
+  "scripts": {
+    "start": "node serve.js",
+    "open": "start index.html"
+  },
+  "author": "Antigravity",
+  "license": "MIT"
+}

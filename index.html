@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Island — Dynamic Island для Windows 10 & 11</title>
+  <meta name="description" content="Официальный сайт приложения Island: умная пилюля из магнитной жидкости для Windows. 25 интерактивных персонажей, управление плеером, буфер обмена и установка из закрытого репозитория GitHub.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='2' y='10' width='28' height='12' rx='6' fill='%23000'/><circle cx='8' cy='16' r='2' fill='%235fe0a0'/><circle cx='22' cy='16' r='3' fill='%23222'/></svg>">
+  <link rel="stylesheet" href="styles.css?v=1.3.7">
+</head>
+<body>
+
+  <!-- Ambient Light Mesh Background -->
+  <div class="ambient-canvas">
+    <div class="ambient-light ambient-light-1"></div>
+    <div class="ambient-light ambient-light-2"></div>
+    <div class="ambient-light ambient-light-3"></div>
+    <div class="ambient-cursor-spotlight" id="cursorSpotlight"></div>
+    <div class="ambient-grid"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <header class="navbar">
+    <div class="container">
+      <div class="navbar-inner">
+        <a href="#" class="nav-brand">
+          <div class="brand-pill" title="Интерактивный Dynamic Island">
+            <span class="brand-dot"></span>
+            <span class="brand-cam"></span>
+          </div>
+          <span class="brand-text">
+            Island
+            <span class="brand-version">v1.3.6</span>
+          </span>
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="#simulator" class="nav-link">Симулятор</a></li>
+          <li><a href="#features" class="nav-link">Возможности</a></li>
+          <li><a href="#characters" class="nav-link">25 Персонажей</a></li>
+          <li><a href="#hotkeys" class="nav-link">Клавиши</a></li>
+          <li><a href="#download" class="nav-link">Скачать</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <a href="Island_Setup.exe" download="Island_Setup.exe" class="btn btn-primary trigger-download" title="Скачать Island v1.3.6 (~168 МБ)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Скачать</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="container">
+        
+        <div class="hero-badge-wrap">
+          <div class="hero-badge">
+            <span class="badge-glow-dot"></span>
+            <span>Релиз v1.3.6 • Бесшовный шелковистый неон • ЦП &lt; 0.8%</span>
+          </div>
+        </div>
+
+        <h1 class="hero-title">
+          Dynamic Island для Windows.<br>
+          <span class="hero-title-gradient">Суперплавный. Живой. Твой.</span>
+        </h1>
+
+        <p class="hero-description">
+          Полная физика магнитной жидкости (ferrofluid), 25 интерактивных персонажей со слежением за курсором, 
+          управление плеером, умный буфер обмена и экранные инструменты в едином ультрасовременном дизайне 60/120 FPS.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="Island_Setup.exe" download="Island_Setup.exe" class="btn btn-primary btn-hero trigger-download">
+            <div class="btn-hero-shine"></div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Скачать Island Setup (v1.3.6)</span>
+          </a>
+
+          <a href="#simulator" class="btn btn-secondary btn-hero">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+            <span>Попробовать симулятор</span>
+          </a>
+        </div>
+
+        <div class="hero-meta-row">
+          <div class="hero-meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Windows 10 / 11 (x64)</span>
+          </div>
+          <div class="hero-meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Размер установщика: 167.8 МБ</span>
+          </div>
+          <div class="hero-meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Все 25 персонажей бесплатны</span>
+          </div>
+          <div class="hero-meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Прямое скачивание без регистрации</span>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE SIMULATOR (4 COMPLETELY DISTINCT HUDS!) -->
+        <div class="simulator-section" id="simulator">
+          <div class="simulator-window">
+            
+            <div class="simulator-window-bar">
+              <div class="sim-dots">
+                <span class="sim-dot red"></span>
+                <span class="sim-dot yellow"></span>
+                <span class="sim-dot green"></span>
+              </div>
+              <span class="sim-title">Интерактивный Dynamic Island (нажмите на пилюлю для раскрытия)</span>
+              <div class="sim-mode-switcher">
+                <button class="sim-pill-btn active" data-sim-mode="media">
+                  <span>🎵</span>
+                  <span>Плеер</span>
+                </button>
+                <button class="sim-pill-btn" data-sim-mode="mascot">
+                  <span>👾</span>
+                  <span>Маскот</span>
+                </button>
+                <button class="sim-pill-btn" data-sim-mode="weather">
+                  <span>⛅</span>
+                  <span>Погода</span>
+                </button>
+                <button class="sim-pill-btn" data-sim-mode="timer">
+                  <span>⏱️</span>
+                  <span>Таймер</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="sim-stage">
+              
+              <!-- DYNAMIC PILL CONTAINER -->
+              <div class="island-dynamic-pill collapsed skin-cyberpunk" id="dynamicPill" title="Нажмите, чтобы развернуть!">
+                
+                <!-- 1. COLLAPSED VIEW -->
+                <div class="island-collapsed-content" id="pillCollapsed">
+                  <div class="island-left-badge">
+                    <div class="island-camera-cutout"></div>
+                    <span class="island-status-text" id="simLeftText">Synthetic Pulse • Kavinsky</span>
+                  </div>
+                  <div class="island-right-badge" id="simRightElement">
+                    <div class="sound-wave">
+                      <span class="wave-bar"></span>
+                      <span class="wave-bar"></span>
+                      <span class="wave-bar"></span>
+                      <span class="wave-bar"></span>
+                      <span class="wave-bar"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. EXPANDED VIEWS (INDIVIDUAL HUD FOR EACH MODE!) -->
+                <div class="island-expanded-content" id="pillExpanded" style="display: none;">
+                  
+                  <!-- HUD 1: MEDIA PLAYER VIEW -->
+                  <div class="island-view active" id="view-media">
+                    <div class="media-header">
+                      <div class="media-info">
+                        <div class="media-album-art">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                        </div>
+                        <div>
+                          <div class="media-title">Cyber City Lights (OST)</div>
+                          <div class="media-subtitle">Kavinsky & Island Studio • Spotify</div>
+                        </div>
+                      </div>
+                      <div class="media-time" id="mediaCurrentTime">01:52</div>
+                    </div>
+
+                    <div class="media-progress-wrap">
+                      <div class="media-prog-bar">
+                        <div class="media-prog-fill" id="mediaProgFill"></div>
+                      </div>
+                    </div>
+
+                    <div class="media-controls-row">
+                      <button class="media-ctrl-btn" title="Перемешать">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+                      </button>
+                      <button class="media-ctrl-btn" title="Предыдущий трек">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+                      </button>
+                      <button class="media-ctrl-btn play" id="btnPlayPause" title="Воспроизведение / Пауза">
+                        <svg id="playIcon" style="display:none;" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        <svg id="pauseIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                      </button>
+                      <button class="media-ctrl-btn" title="Следующий трек">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                      </button>
+                      <button class="media-ctrl-btn" title="Громкость">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- HUD 2: MASCOT VIEW (NO PLAYER CONTROLS!) -->
+                  <div class="island-view" id="view-mascot">
+                    <div class="mascot-hud-wrap">
+                      
+                      <div class="mascot-hud-character-stage" onclick="mascotAction('pet')">
+                        <div class="mascot-sim-avatar" id="simMascotAvatar">
+                          <svg id="simMascotSvg" width="56" height="46" viewBox="0 -3 11 12" style="overflow: visible;">
+                            <path id="simMascotBody" d="" fill="#D97757" />
+                            <path id="simMascotExtra" d="" fill="#fcd34d" />
+                          </svg>
+                        </div>
+                        <span class="mascot-badge-status" id="simCharLabel">Пиксель • В сети</span>
+                      </div>
+
+                      <div class="mascot-hud-details">
+                        <div class="mascot-hud-speech" id="simMascotSpeech">
+                          Привет! Я живу в островке и слежу за твоим курсором! Кликни на кнопки ниже 👇
+                        </div>
+
+                        <div class="mascot-action-pills">
+                          <button class="mascot-btn-action" onclick="mascotAction('pet')">
+                            <span>🐾</span> Погладить
+                          </button>
+                          <button class="mascot-btn-action" onclick="mascotAction('feed')">
+                            <span>🍪</span> Покормить
+                          </button>
+                          <button class="mascot-btn-action" onclick="mascotAction('sleep')">
+                            <span>💤</span> Сон
+                          </button>
+                          <button class="mascot-btn-action" onclick="mascotAction('chat')">
+                            <span>💬</span> Поболтать
+                          </button>
+                        </div>
+
+                        <div class="mascot-stats-row">
+                          <span>Уровень счастья: <strong>100%</strong></span>
+                          <span>Энергия: <strong>98%</strong></span>
+                          <span>ЦП: <strong>0.3%</strong></span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- HUD 3: WEATHER VIEW (NO PLAYER CONTROLS!) -->
+                  <div class="island-view" id="view-weather">
+                    <div class="weather-hud-wrap">
+                      
+                      <div class="weather-header-row">
+                        <div class="weather-temp-block">
+                          <span class="weather-degrees">+18°C</span>
+                          <div class="weather-desc-wrap">
+                            <span class="weather-cond-title">Ясно, без осадков</span>
+                            <span class="weather-location">Москва, MET Norway Live</span>
+                          </div>
+                        </div>
+
+                        <div class="weather-metrics-pills">
+                          <span>💨 3.2 м/с</span>
+                          <span>💧 48%</span>
+                          <span>☀️ УФ 2</span>
+                        </div>
+                      </div>
+
+                      <!-- Hourly pills -->
+                      <div class="weather-hourly-row">
+                        <div class="weather-hour-col">
+                          <span>13:00</span>
+                          <span>☀️</span>
+                          <span>+18°</span>
+                        </div>
+                        <div class="weather-hour-col">
+                          <span>16:00</span>
+                          <span>⛅</span>
+                          <span>+20°</span>
+                        </div>
+                        <div class="weather-hour-col">
+                          <span>19:00</span>
+                          <span>🌤️</span>
+                          <span>+17°</span>
+                        </div>
+                        <div class="weather-hour-col">
+                          <span>22:00</span>
+                          <span>🌙</span>
+                          <span>+14°</span>
+                        </div>
+                        <div class="weather-hour-col">
+                          <span>01:00</span>
+                          <span>✨</span>
+                          <span>+11°</span>
+                        </div>
+                      </div>
+
+                      <div class="weather-effects-row">
+                        <span style="font-size: 11px; color: var(--text-muted);">Сезонный эффект:</span>
+                        <button class="weather-btn-effect active" onclick="setWeatherEffect(this, 'wind')">🍃 Ветер</button>
+                        <button class="weather-btn-effect" onclick="setWeatherEffect(this, 'storm')">⚡ Гроза</button>
+                        <button class="weather-btn-effect" onclick="setWeatherEffect(this, 'sun')">☀️ Солнце</button>
+                        <button class="weather-btn-effect" onclick="setWeatherEffect(this, 'snow')">❄️ Снег</button>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- HUD 4: TIMER VIEW (NO PLAYER CONTROLS!) -->
+                  <div class="island-view" id="view-timer">
+                    <div class="timer-hud-wrap">
+                      
+                      <div class="timer-digits-block">
+                        <div class="timer-digits" id="timerDigits">04:32</div>
+                        <span class="timer-session-label">Фокус на разработке • Режим Pomodoro</span>
+                      </div>
+
+                      <div class="timer-controls-block">
+                        <div class="timer-main-btns">
+                          <button class="timer-btn-primary" id="btnTimerToggle" onclick="toggleTimer()">Пауза</button>
+                          <button class="timer-btn-sec" onclick="resetTimer()">Сброс</button>
+                        </div>
+                        
+                        <div class="timer-presets">
+                          <button class="timer-btn-preset" onclick="setTimerPreset(5)">+5 мин</button>
+                          <button class="timer-btn-preset" onclick="setTimerPreset(15)">+15 мин</button>
+                          <button class="timer-btn-preset" onclick="setTimerPreset(25)">25 мин</button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="island-hint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>Нажмите на островок для раскрытия или используйте <kbd>Ctrl+Alt+I</kbd></span>
+              </div>
+
+            </div>
+
+            <!-- THEME SWITCHER -->
+            <div class="sim-theme-bar">
+              <span class="theme-label">Оформление:</span>
+              <button class="theme-pill-btn active" data-theme-skin="cyberpunk">
+                <span class="theme-color-chip chip-cyberpunk"></span>
+                Киберпанк (Неон v1.3.6)
+              </button>
+              <button class="theme-pill-btn" data-theme-skin="liquid">
+                <span class="theme-color-chip chip-liquid"></span>
+                Жидкое стекло (Liquid Glass)
+              </button>
+              <button class="theme-pill-btn" data-theme-skin="oled">
+                <span class="theme-color-chip chip-oled"></span>
+                OLED Pure Black
+              </button>
+              <button class="theme-pill-btn" data-theme-skin="aurora">
+                <span class="theme-color-chip chip-aurora"></span>
+                Северное сияние (Aurora)
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LIVE DEMO VISUALS -->
+    <section class="section" style="padding-top: 10px; padding-bottom: 40px;">
+      <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+          
+          <div class="feature-card" style="padding: 24px;">
+            <div style="border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #000;">
+              <img src="assets/live-pills.png" alt="Живые пилюли Island" style="width: 100%; height: auto; display: block;">
+            </div>
+            <div style="margin-top: 18px;">
+              <h3 class="feature-card-title">Компактный статус у кромки экрана</h3>
+              <p class="feature-card-desc">Показывает уровень батареи, загрузки, громкость, погоду и таймер прямо у верхней границы экрана без перекрытия рабочих окон.</p>
+            </div>
+          </div>
+
+          <div class="feature-card" style="padding: 24px;">
+            <div style="border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #000;">
+              <img src="assets/demo-en.webp" alt="Анимация Island" style="width: 100%; height: auto; display: block;">
+            </div>
+            <div style="margin-top: 18px;">
+              <h3 class="feature-card-title">Физика магнитной жидкости</h3>
+              <p class="feature-card-desc">Плавное притяжение к курсору, капли дождя, перетекание контуров и сверхгладкие пружинные анимации 60/120 FPS.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- DOWNLOAD & TERMINAL SECTION -->
+    <section class="section" id="download">
+      <div class="container">
+        <div class="github-install-box">
+          
+          <div class="github-repo-badge">
+            <span class="repo-lock-dot"></span>
+            <span>Island v1.3.6 • Официальный установщик Windows</span>
+          </div>
+
+          <h2 class="github-install-title">Скачать Island для Windows</h2>
+          <p class="github-install-desc">
+            Прямая загрузка автономного установщика Island Setup. Без регистрации, без токенов, без скрытых подписок. Доступно для всех пользователей.
+          </p>
+
+          <a href="Island_Setup.exe" download="Island_Setup.exe" class="github-btn-main trigger-download" style="text-decoration:none;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Скачать Island_Setup.exe (168 МБ)</span>
+          </a>
+
+          <!-- Clickable button below to toggle PowerShell & Git commands -->
+          <div style="margin-top: 24px;">
+            <button class="btn btn-secondary" id="btnToggleCli" type="button" onclick="toggleCliDrawer()" style="padding: 11px 26px; font-size: 14px; border-radius: var(--radius-full); gap: 10px; cursor: pointer; user-select: none;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+              <span>Команды для PowerShell и Git</span>
+              <svg id="cliArrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition: transform 0.25s;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+          </div>
+
+          <!-- Collapsible CLI Commands Container -->
+          <div id="cliCommandsDrawer" style="display: none; margin-top: 24px; animation: fadeIn 0.3s ease;">
+            
+            <!-- 1-Line PowerShell Command Box -->
+            <div class="terminal-command-card" style="margin-top: 0;">
+              <div class="terminal-header">
+                <span class="terminal-header-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                  Установка через PowerShell в 1 строку (Без токенов и паролей)
+                </span>
+                <button class="btn btn-secondary copy-cmd-btn" id="btnCopyPs" type="button" onclick="copyPsCommand(this)" style="padding: 6px 14px; font-size: 12px; cursor: pointer;">
+                  Копировать
+                </button>
+              </div>
+              <div class="terminal-body">
+                <div class="terminal-code" id="psCommandCode">powershell -ExecutionPolicy Bypass -Command "$d=\"$env:TEMP\Island_Setup.exe\"; Write-Host 'Загрузка Island_Setup.exe...'; Invoke-WebRequest -Uri 'http://localhost:3000/Island_Setup.exe' -OutFile $d; Start-Process $d"</div>
+              </div>
+            </div>
+
+            <!-- Git Clone Box -->
+            <div class="terminal-command-card" style="margin-top: 14px;">
+              <div class="terminal-header">
+                <span class="terminal-header-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><path d="M13 6h3a2 2 0 0 1 2 2v7"></path><line x1="6" y1="9" x2="6" y2="21"></line></svg>
+                  Клонирование и запуск из исходников (Git & Node.js)
+                </span>
+                <button class="btn btn-secondary copy-cmd-btn" id="btnCopyGit" type="button" onclick="copyGitCommand(this)" style="padding: 6px 14px; font-size: 12px; cursor: pointer;">
+                  Копировать
+                </button>
+              </div>
+              <div class="terminal-body">
+                <div class="terminal-code" id="gitCommandCode">git clone https://github.com/zero4kka/island.git
+cd island
+npm install
+npm start</div>
+              </div>
+            </div>
+
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px;">
+              🔒 100% открытый и безопасный доступ: установка не требует API-ключей, токенов или ссылок-приглашений.
+            </p>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CORE FEATURES SECTION -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Возможности</div>
+          <h2 class="section-title">Каждый пиксель отточен до совершенства</h2>
+          <p class="section-subtitle">
+            Island объединяет мощные утилиты продуктивности macOS и iOS в нативном, быстром и гибком интерфейсе для Windows.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+            </div>
+            <h3 class="feature-card-title">Магнитная жидкость (Ferrofluid)</h3>
+            <p class="feature-card-desc">
+              Пилюля физически тянется за курсором мыши, капает каплями при сезонном дожде и реагирует на касание верхнего края экрана.
+            </p>
+            <span class="feature-card-pill">60/120 FPS Физика</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+            </div>
+            <h3 class="feature-card-title">Медиа-хаб и колесо звука</h3>
+            <p class="feature-card-desc">
+              Автоматическое определение Spotify, Яндекс.Музыки, Chrome и системного плеера. Эквалайзер и колесо регулировки громкости.
+            </p>
+            <span class="feature-card-pill">Все плееры</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </div>
+            <h3 class="feature-card-title">История буфера (Ctrl+Alt+V)</h3>
+            <p class="feature-card-desc">
+              Хранение текста и скриншотов с поиском и закреплением. Вставка в активное окно кликом мыши без потери фокуса!
+            </p>
+            <span class="feature-card-pill">Instant Paste</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+            <h3 class="feature-card-title">Командная строка (Alt+Space)</h3>
+            <p class="feature-card-desc">
+              Мгновенный поиск приложений, калькулятор выражений, актуальные курсы валют ЦБ РФ, таймер и напоминания одной фразой.
+            </p>
+            <span class="feature-card-pill">Alt + Space</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </div>
+            <h3 class="feature-card-title">Полка файлов (File Shelf)</h3>
+            <p class="feature-card-desc">
+              Перетащите файлы прямо на островок — они временно закрепятся в мини-полке, пока вы переключаете окна и рабочие столы.
+            </p>
+            <span class="feature-card-pill">Drag & Drop</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            </div>
+            <h3 class="feature-card-title">Скриншоты, пипетка и OCR</h3>
+            <p class="feature-card-desc">
+              Скриншот области (Ctrl+Alt+S) с редактором стрелок, рамок и размытия. Офлайн распознавание текста Tesseract (рус/англ).
+            </p>
+            <span class="feature-card-pill">Встроенный редактор</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+            </div>
+            <h3 class="feature-card-title">Инструменты для текста</h3>
+            <p class="feature-card-desc">
+              Исправление неверной раскладки (ru/en), регистр, транслит, форматирование JSON, Base64, URL и генератор QR-кодов.
+            </p>
+            <span class="feature-card-pill">Быстрый буфер</span>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
+            </div>
+            <h3 class="feature-card-title">Погода MET Norway & Сезоны</h3>
+            <p class="feature-card-desc">
+              Точный метеорологический прогноз на 24 часа и неделю. Живые эффекты: тихий снег, весенний ветер, солнце и грозовой шторм.
+            </p>
+            <span class="feature-card-pill">Живой прогноз</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 25 CHARACTERS SECTION -->
+    <section class="section" id="characters">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Интерактивные персонажи</div>
+          <h2 class="section-title">25 спутников для вашего островка</h2>
+          <p class="section-subtitle">
+            Каждый персонаж анимирован вручную, имеет собственный характер, звуки и реакции. 
+            Все 25 персонажей навсегда бесплатны и разблокированы в версии v1.3.6!
+          </p>
+        </div>
+
+        <div class="characters-stage">
+          <div class="characters-filter-bar">
+            <div style="font-size: 14px; color: var(--text-secondary);">
+              Кликните по карточке, чтобы примерить персонажа в симуляторе выше:
+            </div>
+            <div style="position: relative;">
+              <input type="text" id="charSearch" class="char-search-input" placeholder="Поиск персонажа...">
+            </div>
+          </div>
+
+          <div class="characters-grid" id="charactersGrid">
+            <!-- Dynamically populated by app.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOTKEYS SECTION -->
+    <section class="section" id="hotkeys">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Горячие клавиши</div>
+          <h2 class="section-title">Управляйте со скоростью мысли</h2>
+          <p class="section-subtitle">
+            Нажимайте эти комбинации прямо сейчас на клавиатуре — они подсветятся на сайте!
+          </p>
+        </div>
+
+        <div class="hotkeys-grid">
+          
+          <div class="hotkey-card" data-keys="Ctrl + Alt + I">
+            <div>
+              <span class="hotkey-title">Открыть / скрыть Island</span>
+              <span class="hotkey-desc">Мгновенное разворачивание пилюли</span>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <span class="kbd-key">Ctrl</span>
+              <span class="kbd-key">Alt</span>
+              <span class="kbd-key">I</span>
+            </div>
+          </div>
+
+          <div class="hotkey-card" data-keys="Alt + Space">
+            <div>
+              <span class="hotkey-title">Командная строка</span>
+              <span class="hotkey-desc">Поиск, вычисления, курсы ЦБ</span>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <span class="kbd-key">Alt</span>
+              <span class="kbd-key">Space</span>
+            </div>
+          </div>
+
+          <div class="hotkey-card" data-keys="Ctrl + Alt + V">
+            <div>
+              <span class="hotkey-title">История буфера обмена</span>
+              <span class="hotkey-desc">Тексты, скриншоты, быстрый ввод</span>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <span class="kbd-key">Ctrl</span>
+              <span class="kbd-key">Alt</span>
+              <span class="kbd-key">V</span>
+            </div>
+          </div>
+
+          <div class="hotkey-card" data-keys="Ctrl + Alt + S">
+            <div>
+              <span class="hotkey-title">Скриншот области экрана</span>
+              <span class="hotkey-desc">Выделение с разметкой и стрелками</span>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <span class="kbd-key">Ctrl</span>
+              <span class="kbd-key">Alt</span>
+              <span class="kbd-key">S</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Вопросы и ответы</div>
+          <h2 class="section-title">Часто задаваемые вопросы</h2>
+          <p class="section-subtitle">Всё, что вам нужно знать перед установкой Island на ваш компьютер.</p>
+        </div>
+
+        <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));">
+          
+          <div class="feature-card">
+            <h3 class="feature-card-title">Как работает установка из закрытого репозитория?</h3>
+            <p class="feature-card-desc">
+              Репозиторий <strong>zero4kka/island</strong> является приватным на GitHub. В установщик встроен специальный токен доступа к GitHub Releases API, позволяющий автоматически получать свежие обновления без необходимости ручной авторизации в аккаунте.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <h3 class="feature-card-title">Сильно ли программа нагружает процессор и батарею?</h3>
+            <p class="feature-card-desc">
+              В версии v1.3.6 была проведена оптимизация таймеров и анимационного цикла. В режиме ожидания Island потребляет менее 0.8% ЦП и использует аппаратное ускорение видеокарты (DirectX), не разряжая батарею на ноутбуках.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <h3 class="feature-card-title">Бесплатны ли все 25 персонажей?</h3>
+            <p class="feature-card-desc">
+              Да! Все 25 интерактивных персонажей (Пиксель, Искра, Медуза, Хомяк, Костёр и др.) и все темы оформления (Liquid Glass, Cyberpunk Neon, OLED) разблокированы навсегда и бесплатно.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- INTERACTIVE PIXEL COMPANION IN CORNER -->
+  <aside class="mascot-companion" id="mascotCompanion">
+    <div class="mascot-sparkle" id="mascotSparkle">💖</div>
+    <div class="mascot-speech-bubble" id="mascotSpeech">
+      Привет! Я Пиксель. Нажимай «Скачать» и пробуй Island! ✨
+    </div>
+    <div class="mascot-avatar" id="mascotAvatar" title="Кликните на Пикселя!">
+      <svg id="mascotSvg" width="46" height="38" viewBox="0 -3 11 12" style="overflow: visible;">
+        <path id="mascotBody" d="" fill="#D97757" />
+        <path id="mascotExtra" d="" fill="#fcd34d" />
+      </svg>
+    </div>
+  </aside>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-copy">
+          © 2026 <strong>Island</strong> for Windows. Сверхплавная пилюля продуктивности.
+        </div>
+        <ul class="footer-links">
+          <li><a href="#simulator" class="footer-link">Симулятор</a></li>
+          <li><a href="#features" class="footer-link">Функции</a></li>
+          <li><a href="#characters" class="footer-link">25 Персонажей</a></li>
+          <li><a href="#download" class="footer-link">Скачать (v1.3.6)</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ---------------------------------------------------------
+    // ROCK-SOLID GLOBAL CLI TOGGLE & CLIPBOARD ENGINE
+    // ---------------------------------------------------------
+    var lastToggleTs = 0;
+    function toggleCliDrawer(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      var now = Date.now();
+      if (now - lastToggleTs < 250) return; // Debounce double-trigger
+      lastToggleTs = now;
+
+      var drawer = document.getElementById('cliCommandsDrawer');
+      var arrow = document.getElementById('cliArrow');
+      var btn = document.getElementById('btnToggleCli');
+      if (!drawer) return;
+
+      var isHidden = (drawer.style.display === 'none' || !drawer.style.display || window.getComputedStyle(drawer).display === 'none');
+      if (isHidden) {
+        drawer.style.display = 'block';
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+        if (btn) btn.style.borderColor = 'var(--accent-blue)';
+        try {
+          drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } catch(err) {}
+      } else {
+        drawer.style.display = 'none';
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        if (btn) btn.style.borderColor = '';
+      }
+    }
+
+    function copyTextToClipboard(text, btnElement) {
+      function onSuccess() {
+        if (typeof window.showToast === 'function') {
+          window.showToast('📋 Команда скопирована в буфер обмена!');
+        }
+        if (btnElement) {
+          var oldHtml = btnElement.innerHTML;
+          btnElement.innerHTML = '✓ Скопировано!';
+          btnElement.style.borderColor = 'var(--accent-mint)';
+          btnElement.style.color = 'var(--accent-mint)';
+          setTimeout(function() {
+            btnElement.innerHTML = oldHtml;
+            btnElement.style.borderColor = '';
+            btnElement.style.color = '';
+          }, 2000);
+        }
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onSuccess).catch(function() {
+          fallbackCopy(text, onSuccess);
+        });
+      } else {
+        fallbackCopy(text, onSuccess);
+      }
+    }
+
+    function fallbackCopy(text, cb) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        if (cb) cb();
+      } catch(e) {}
+      document.body.removeChild(ta);
+    }
+
+    function getPsCommandString() {
+      var host = window.location.protocol.startsWith('http') ? window.location.origin : 'http://localhost:3000';
+      var dlUrl = host + '/Island_Setup.exe';
+      return 'powershell -ExecutionPolicy Bypass -Command "$d=\\"$env:TEMP\\Island_Setup.exe\\"; Write-Host \'Загрузка Island_Setup.exe...\'; Invoke-WebRequest -Uri \'' + dlUrl + '\' -OutFile $d; Start-Process $d"';
+    }
+
+    function copyPsCommand(btn) {
+      var codeEl = document.getElementById('psCommandCode');
+      var cmd = codeEl ? codeEl.textContent.trim() : getPsCommandString();
+      copyTextToClipboard(cmd, btn);
+    }
+
+    function copyGitCommand(btn) {
+      var cmd = 'git clone https://github.com/zero4kka/island.git && cd island && npm install && npm start';
+      copyTextToClipboard(cmd, btn);
+    }
+
+    function copyCommandText(text, btn) {
+      copyTextToClipboard(text, btn);
+    }
+
+    // Attach immediately to window
+    window.toggleCliDrawer = toggleCliDrawer;
+    window.copyPsCommand = copyPsCommand;
+    window.copyGitCommand = copyGitCommand;
+    window.copyCommandText = copyCommandText;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var host = window.location.protocol.startsWith('http') ? window.location.origin : 'http://localhost:3000';
+      var dlUrl = host + '/Island_Setup.exe';
+      var codeEl = document.getElementById('psCommandCode');
+      if (codeEl) {
+        codeEl.textContent = 'powershell -ExecutionPolicy Bypass -Command "$d=\\"$env:TEMP\\Island_Setup.exe\\"; Write-Host \'Загрузка Island_Setup.exe...\'; Invoke-WebRequest -Uri \'' + dlUrl + '\' -OutFile $d; Start-Process $d"';
+      }
+    });
+  </script>
+  <script src="app.js?v=1.3.7"></script>
+</body>
+</html>
